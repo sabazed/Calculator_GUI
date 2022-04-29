@@ -1,7 +1,7 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class Calculator extends JFrame {
 
@@ -50,11 +50,57 @@ public class Calculator extends JFrame {
     private JLabel val;
     private JLabel result;
 
+    private KeyListener listener = new KeyListener() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_BACK_SPACE -> del.doClick();
+                case KeyEvent.VK_NUMPAD0 -> zero.doClick();
+                case KeyEvent.VK_NUMPAD1 -> one.doClick();
+                case KeyEvent.VK_NUMPAD2 -> two.doClick();
+                case KeyEvent.VK_NUMPAD3 -> three.doClick();
+                case KeyEvent.VK_NUMPAD4 -> four.doClick();
+                case KeyEvent.VK_NUMPAD5 -> five.doClick();
+                case KeyEvent.VK_NUMPAD6 -> six.doClick();
+                case KeyEvent.VK_NUMPAD7 -> seven.doClick();
+                case KeyEvent.VK_NUMPAD8 -> eight.doClick();
+                case KeyEvent.VK_NUMPAD9 -> nine.doClick();
+                case KeyEvent.VK_PLUS -> add.doClick();
+                case KeyEvent.VK_ADD -> add.doClick();
+                case KeyEvent.VK_MINUS -> sub.doClick();
+                case KeyEvent.VK_SUBTRACT -> sub.doClick();
+                case KeyEvent.VK_MULTIPLY -> mul.doClick();
+                case KeyEvent.VK_ASTERISK -> mul.doClick();
+                case KeyEvent.VK_DIVIDE -> div.doClick();
+                case KeyEvent.VK_SLASH -> div.doClick();
+                case KeyEvent.VK_0 -> zero.doClick();
+                case KeyEvent.VK_1 -> one.doClick();
+                case KeyEvent.VK_2 -> two.doClick();
+                case KeyEvent.VK_3 -> three.doClick();
+                case KeyEvent.VK_4 -> four.doClick();
+                case KeyEvent.VK_5 -> five.doClick();
+                case KeyEvent.VK_6 -> six.doClick();
+                case KeyEvent.VK_7 -> seven.doClick();
+                case KeyEvent.VK_8 -> eight.doClick();
+                case KeyEvent.VK_9 -> nine.doClick();
+                case KeyEvent.VK_C -> clear.doClick();
+                case KeyEvent.VK_ENTER -> equal.doClick();
+                case KeyEvent.VK_EQUALS -> equal.doClick();
+            }
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {}
+        @Override
+        public void keyTyped(KeyEvent e) {}
+    };
+
     public Calculator(String title) throws HeadlessException {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(frame);
         this.pack();
+
+        this.addKeyListener(listener);
 
         one.addActionListener(new ActionListener() {
             @Override
@@ -192,6 +238,7 @@ public class Calculator extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (wasEq) {
                     current = new StringBuilder("0");
+                    wasEq = false;
                 }
                 else {
                     int temp = current.length();
@@ -229,6 +276,7 @@ public class Calculator extends JFrame {
             current.delete(0, current.length() - 1);
             prev = 0;
             currop = lastop = null;
+            wasEq = false;
         }
         if (current.charAt(0) == '.') current.insert(0, 0);
         if (current.length() > 1 && current.charAt(0) == '0') {
@@ -243,7 +291,7 @@ public class Calculator extends JFrame {
         if (opOrNum) value.append(current + " " + currop.str + " ");
         else {
             int tmp = value.length();
-            value.replace(tmp - 2, tmp - 1, currop.str);
+            if (tmp != 1) value.replace(tmp - 2, tmp - 1, currop.str);
         }
         val.setText(value.toString());
         pointed = false;
@@ -281,6 +329,7 @@ public class Calculator extends JFrame {
     public static void main(String[] args) {
         JFrame calc = new Calculator("Calculator");
         calc.setResizable(false);
+        calc.setFocusable(true);
         calc.setVisible(true);
     }
 }
