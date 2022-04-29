@@ -52,9 +52,12 @@ public class Calculator extends JFrame {
 
     private KeyListener listener = new KeyListener() {
         @Override
-        public void keyReleased(KeyEvent e) {
+        public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_BACK_SPACE -> del.doClick();
+                case KeyEvent.VK_DELETE -> del.doClick();
+                case KeyEvent.VK_PERIOD -> point.doClick();
+                case KeyEvent.VK_DECIMAL -> point.doClick();
                 case KeyEvent.VK_NUMPAD0 -> zero.doClick();
                 case KeyEvent.VK_NUMPAD1 -> one.doClick();
                 case KeyEvent.VK_NUMPAD2 -> two.doClick();
@@ -89,7 +92,7 @@ public class Calculator extends JFrame {
             }
         }
         @Override
-        public void keyPressed(KeyEvent e) {}
+        public void keyReleased(KeyEvent e) {}
         @Override
         public void keyTyped(KeyEvent e) {}
     };
@@ -288,12 +291,6 @@ public class Calculator extends JFrame {
     }
 
     private void operate() {
-        if (opOrNum) value.append(current + " " + currop.str + " ");
-        else {
-            int tmp = value.length();
-            if (tmp != 1) value.replace(tmp - 2, tmp - 1, currop.str);
-        }
-        val.setText(value.toString());
         pointed = false;
         boolean isEq = currop == Operators.EQUAL;
         double temp;
@@ -318,6 +315,15 @@ public class Calculator extends JFrame {
                 val.setText(value.toString());
             }
         }
+        if (opOrNum) {
+            if (prev % 1 == 0) value = new StringBuilder((int) prev + " " + currop.str + " ");
+            else value = new StringBuilder(prev + " " + currop.str + " ");
+        }
+        else {
+            int tmp = value.length();
+            value.replace(tmp - 2, tmp - 1, currop.str);
+        }
+        val.setText(value.toString());
         if (isEq) wasEq = true;
         else current = new StringBuilder();
         lastop = currop;
